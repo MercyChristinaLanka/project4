@@ -42,6 +42,6 @@ jobs:
       - name: Deploy Secondary
         uses: azure/webapps-deploy@v3
         with:
-          app-name: project4-secondarywebapp
+          app-name: proj4-secondarywebapp
           publish-profile: ${{ secrets.AZURE_SECONDARY_PUBLISH_PROFILE }}
           package: .
