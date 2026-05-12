@@ -1,14 +1,9 @@
-name: Build and deploy Node.js app (Primary + Secondary)
+name: Deploy Node.js App (Primary + Secondary)
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   build:
@@ -17,16 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
       - run: npm install
-
-      - run: npm run build --if-present
-
-      - run: npm test --if-present
 
   deploy-primary:
     runs-on: ubuntu-latest
@@ -35,17 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       - name: Deploy Primary
         uses: azure/webapps-deploy@v3
         with:
           app-name: project4-primarywebapp
+          publish-profile: ${{ secrets.AZURE_PRIMARY_PUBLISH_PROFILE }}
           package: .
 
   deploy-secondary:
@@ -55,15 +39,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       - name: Deploy Secondary
         uses: azure/webapps-deploy@v3
         with:
           app-name: project4-secondarywebapp
+          publish-profile: ${{ secrets.AZURE_SECONDARY_PUBLISH_PROFILE }}
           package: .
