@@ -1,6 +1,14 @@
 const http = require("http");
 
 const server = http.createServer((req, res) => {
+
+    // ✅ HEALTH CHECK FOR TRAFFIC MANAGER
+    if (req.url === "/health") {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        return res.end("OK");
+    }
+
+    // MAIN PAGE
     res.writeHead(200, { "Content-Type": "text/html" });
 
     res.end(`
